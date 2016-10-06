@@ -107,5 +107,5 @@ def logout_view(request):
     return HttpResponse('you have logouted')
 
 # edit on dev4
-# asdgdsg666
-# asdfsd
+# asdgdsg
+# feature1
