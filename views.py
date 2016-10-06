@@ -108,5 +108,5 @@ def logout_view(request):
 
 # edit on dev4
 # asdgdsg
-# feature6
+# feature7
 # remote
