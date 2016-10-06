@@ -1,0 +1,395 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    {#    <meta name="robots" content="all,follow">#}
+    {#    <meta name="googlebot" content="index,follow,snippet,archive">#}
+    {#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+    {#    <meta name="description" content="Obaju e-commerce template">#}
+    {#    <meta name="author" content="Ondrej Svestka | ondrejsvestka.cz">#}
+    {#    <meta name="keywords" content="">#}
+
+    <title>
+        Demo
+    </title>
+
+    {#    <meta name="keywords" content="">#}
+    {% block head %}
+{#        <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>#}
+
+        <!-- styles -->
+        <link href="{% static "demo/css/font-awesome.css" %}" rel="stylesheet">
+        <link href="{% static "demo/css/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "demo/css/animate.min.css" %}" rel="stylesheet">
+        <link href="{% static "demo/css/owl.carousel.css" %}" rel="stylesheet">
+        <link href="{% static "demo/css/owl.theme.css" %}" rel="stylesheet">
+
+        <!-- theme stylesheet -->
+        <link href="{% static "demo/css/style.default.css" %}" rel="stylesheet" id="theme-stylesheet">
+
+        <!-- your stylesheet with modifications -->
+        <link href="{% static "demo/css/custom.css" %}" rel="stylesheet">
+
+        <script src="{% static "demo/js/respond.min.js" %}"></script>
+
+        <link rel="shortcut icon" href="./favicon.png">
+
+
+    {% endblock %}
+
+</head>
+
+<body>
+
+<div id="top">
+    <!---------------------------------the black hearder------------------------------>
+    <div class="container">
+        <div class="col-md-6 offer" data-animate="fadeInDown">
+            <a href="#" class="btn btn-success btn-sm" data-animate-hover="shake">Offer of the day</a> <a href="#">Get
+            flat 35% off on orders over $50!</a>
+        </div>
+        <div class="col-md-6" data-animate="fadeInDown">
+            <ul class="menu">
+                <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                </li>
+                <li><a href="register.html">Register</a>
+                </li>
+                <li><a href="contact.html">Contact</a>
+                </li>
+                <li><a href="#">Recently viewed</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!---------------------------pop up window for login and register--------------->
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="Login">Customer login</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="customer-orders.html" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="email-modal" placeholder="email">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="password-modal" placeholder="password">
+                        </div>
+                        <p class="text-center">
+                            <button class="btn btn-primary"><i class="fa fa-sign-in"></i> Log in</button>
+                        </p>
+                    </form>
+                    <p class="text-center text-muted">Not registered yet?</p>
+                    <p class="text-center text-muted"><a href="register.html"><strong>Register now</strong></a>! It is
+                        easy and done in 1&nbsp;minute and gives you access to special discounts and much more!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- *** TOP BAR END *** -->
+
+<!-- *** NAVBAR ***
+_________________________________________________________ -->
+
+<div class="navbar navbar-default yamm" role="navigation" id="navbar">
+    <div class="container">
+        <div class="navbar-header">
+
+            <a class="navbar-brand home" href="index.html" data-animate-hover="bounce">
+                <img src="{% static "demo/img/logo.png" %}" alt="Obaju logo" class="hidden-xs">
+                <img src="{% static "demo/img/logo-small.png" %}" alt="Obaju logo" class="visible-xs"><span
+                    class="sr-only">Obaju - go to homepage</span>
+            </a>
+            <div class="navbar-buttons">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i class="fa fa-align-justify"></i>
+                </button>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#search">
+                    <span class="sr-only">Toggle search</span>
+                    <i class="fa fa-search"></i>
+                </button>
+                <a class="btn btn-default navbar-toggle" href="basket.html">
+                    <i class="fa fa-shopping-cart"></i> <span class="hidden-xs">3 items in cart</span>
+                </a>
+            </div>
+        </div>
+        <!--/.navbar-header -->
+        <!----------------------navigation bar----------------------------------->
+        <div class="navbar-collapse collapse" id="navigation">
+            <ul class="nav navbar-nav navbar-left">
+                <li class="active"><a href="{% url 'demo:home' %}">Home</a></li>
+                <li><a href="{% url 'demo:home' %}">User</a></li>
+                <li><a href="{% url 'demo:home' %}">About</a></li>
+            </ul>
+
+        </div>
+        <!--/.nav-collapse -->
+
+        <!-----------------------cart------------------------------->
+        <div class="navbar-buttons">
+            {% block cartbutton %}
+            <div class="navbar-collapse collapse right" id="basket-overview">
+                <a href="{% url 'demo:cart' %}" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i>
+                    <span id="cartnum" class="hidden-sm">{% if cart_num %}{{ cart_num }}{% else %}0{% endif %}</span> items in cart</a>
+            </div>
+            <!--/.nav-collapse -->
+            {% endblock %}
+
+            <div class="navbar-collapse collapse right" id="search-not-mobile">
+                <button type="button" class="btn navbar-btn btn-primary" data-toggle="collapse" data-target="#search">
+                    <span class="sr-only">Toggle search</span>
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+
+        </div>
+        {% block searchbox %}
+        <!---------------------search box-------------------------------------------->
+        <div class="collapse clearfix" id="search">
+            <form class="navbar-form" role="search" action="" method="get">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <!--/.nav-collapse -->
+        {% endblock %}
+    </div>
+    <!-- /.container -->
+</div>
+<!-- /#navbar -->
+
+<!-- *** NAVBAR END *** -->
+<div id="all">
+    {% block content %}
+        <div id="content">
+            <div class="container">
+                {% block base_left %}
+                    <div class="col-md-3">
+                        <!-- *** MENUS AND FILTERS ***-->
+                        <!----------------------------Categories-------------------------------->
+                        <div class="panel panel-default sidebar-menu">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Categories</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked category-menu">
+                                    {% for category in categries %}
+                                        {% if category.slug == slug and not request.POST.q %}
+                                            <li class="active">
+                                                <a href="{% url 'demo:index' category.slug %}">{{ category.name }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <a href="{% url 'demo:index' category.slug %}">{{ category.name }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+                {% block base_right %}
+                    <div class="col-md-9">
+                        <!------------------main content, office supply----------------------->
+                        <div class="row products">
+                            {% if not supplies %}
+                                <h3 style="padding: 1em 0 1em 1em ">Sorry, your search "{{ query }}" did not match any
+                                    products.</h3>
+                            {% endif %}
+                            {% for supplie in supplies %}
+                                <div class="col-md-4 col-xs-6">
+                                    <div class="product">
+                                        <div class="flip-container">
+                                            <div class="flipper">
+                                                <div class="front">
+                                                    <a href="detail.html">
+                                                        <img src="{{ supplie.image.url }}" alt=""
+                                                             class="img-responsive">
+                                                    </a>
+                                                </div>
+                                                <div class="back">
+                                                    <a href="detail.html">
+                                                        <img src="{{ supplie.image.url }}" alt=""
+                                                             class="img-responsive">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="detail.html" class="invisible">
+                                            <img src="{{ supplie.image.url }}" alt="" class="img-responsive">
+                                        </a>
+                                        <div class="text">
+                                            <h3><a href="detail.html">{{ supplie.name }}</a></h3>
+                                            <p class="buttons">
+                                                <a href="detail.html" class="btn btn-default">View detail</a>
+                                                <a href="basket.html" class="btn btn-primary">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                    Add to cart
+                                                </a>
+                                            </p>
+                                        </div>
+                                        <!-- /.text -->
+                                    </div>
+                                    <!-- /.product -->
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <!-- /.products -->
+                        <!------------------------paginator------------------------------------>
+                        {% if supplies.paginator.num_pages > 1 %}
+                            <div class="pages">
+                                <ul class="pagination">
+                                    <li>
+                                        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">First</a>
+                                    </li>
+                                    {% if supplies.has_previous %}
+                                        <li><a href="?page=
+
+                                                {{ supplies.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo;</a>
+                                        </li>
+                                    {% endif %}
+                                    {% for i in supplies.paginator.page_range %}
+                                        {% if supplies.number == i %}
+                                            <li class="active"><a>{{ i }}</a></li>
+                                        {% else %}
+                                            <li><a href="?page=
+
+                                                    {{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if supplies.has_next %}
+                                        <li><a href="?page=
+
+                                                {{ supplies.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&raquo;</a>
+                                        </li>
+                                    {% endif %}
+                                    <li><a href="?page=
+
+                                            {{ supplies.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Last</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!---------------------------------------------------------------------------------->
+
+                    </div>
+                    <!-- /.col-md-9 -->
+                {% endblock %}
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
+    {% endblock %}
+    <!-- /#content -->
+
+    <!-- *** COPYRIGHT *** -->
+    {% block copyright %}
+        <div id="copyright">
+            <div class="container">
+                <div class="col-md-6">
+                    <p class="pull-left">© 2016 ABCDEF...</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="pull-right">Template by <a
+                            href="http://bootstrapious.com/e-commerce-templates">Bootstrapious</a> with support from <a
+                            href="https://kakusei.cz">Kakusei</a>
+                        <!-- Not removing these links is part of the licence conditions of the template. Thanks for understanding :) -->
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    <!-- *** COPYRIGHT END *** -->
+
+
+</div>
+<!-- /#all -->
+
+
+<!-- *** SCRIPTS TO INCLUDE ***
+_________________________________________________________ -->
+
+<script src="{% static "demo/js/jquery-1.11.0.min.js" %}"></script>
+{#<script src="{% static "demo/js/jquery.min.js" %}"></script>#}
+<script src="{% static "demo/js/bootstrap.min.js" %}"></script>
+<script src="{% static "demo/js/jquery.cookie.js" %}"></script>
+<script src="{% static "demo/js/waypoints.min.js" %}"></script>
+<script src="{% static "demo/js/modernizr.js" %}"></script>
+<script src="{% static "demo/js/bootstrap-hover-dropdown.js" %}"></script>
+<script src="{% static "demo/js/owl.carousel.min.js" %}"></script>
+<script src="{% static "demo/js/front.js" %}"></script>
+<script type="text/javascript">
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    //alert(csrftoken);
+    function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+</script>
+{% block js %}
+    <script type="text/javascript">
+        $('.cart').click(function (e) {
+            e.preventDefault();
+            var link = $(this);
+            //alert(link.attr('id'));
+            $.ajax({
+                type: 'POST',
+                url: '/add-to-cart/',
+                data: JSON.stringify({
+                    sid:link.attr('id')
+                }),
+                contentType: 'application/json',
+                error: function (err) {
+                    alert("Please enable cookies and try again.");
+                },
+                success: function (arg) {
+                    document.getElementById('cartnum').innerHTML = arg;
+                    alert('Success');
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+</body>
+
+</html>

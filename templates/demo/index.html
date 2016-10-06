@@ -1,0 +1,162 @@
+{% extends 'demo/base.html' %}
+{#{% block cartbutton %}#}
+{#    <div class="navbar-collapse collapse right" id="basket-overview">#}
+{#        <a href="basket.html" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i>#}
+{#            <span id="cartnum" class="hidden-sm">{% if cart_num %}{{ cart_num }}{% else %}0{% endif %}</span> items in cart</a>#}
+{#    </div>#}
+{#    <!--/.nav-collapse -->#}
+{#{% endblock %}#}
+{% block base_left %}
+    <div class="col-md-3">
+        <!-- *** MENUS AND FILTERS ***-->
+        <!----------------------------Categories-------------------------------->
+        <div class="panel panel-default sidebar-menu">
+            <div class="panel-heading">
+                <h3 class="panel-title">Categories</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-stacked category-menu">
+                    {% for category in categries %}
+                        {% if category.slug == slug and not request.POST.q %}
+                            <li class="active">
+                                <a href="{% url 'demo:index' category.slug %}">{{ category.name }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'demo:index' category.slug %}">{{ category.name }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block base_right %}
+    <div class="col-md-9">
+        <!------------------main content, office supply----------------------->
+        <div class="row products">
+            {% if not supplies %}
+                <h3 style="padding: 1em 0 1em 1em ">Sorry, your search "{{ query }}" did not match any
+                    products.</h3>
+            {% endif %}
+            {% for supply in supplies %}
+                <div class="col-md-4 col-xs-6">
+                    <div class="product">
+                        <div class="flip-container">
+                            <div class="flipper">
+                                <div class="front">
+                                    <a href="{% url 'demo:detail' supply.id %}">
+                                        <img src="{{ supply.image.url }}" alt=""
+                                             class="img-responsive">
+                                    </a>
+                                </div>
+                                <div class="back">
+                                    <a href="{% url 'demo:detail' supply.id %}">
+                                        <img src="{{ supply.image.url }}" alt=""
+                                             class="img-responsive">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'demo:detail' supply.id %}" class="invisible">
+                            <img src="{{ supply.image.url }}" alt="" class="img-responsive">
+                        </a>
+                        <div class="text">
+                            <h3><a href="{% url 'demo:detail' supply.id %}">{{ supply.name }}</a></h3>
+                            <p class="buttons">
+                                <a href="{% url 'demo:detail' supply.id %}" class="btn btn-default">View
+                                    detail</a>
+                                <input type="hidden" id="">
+                                <a href="" id="{{ supply.id }}" class="btn btn-primary cart">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Add to cart
+                                </a>
+                            </p>
+                        </div>
+                        <!-- /.text -->
+                    </div>
+                    <!-- /.product -->
+                </div>
+            {% endfor %}
+        </div>
+        <!-- /.products -->
+        <!------------------------paginator------------------------------------>
+        {% if supplies.paginator.num_pages > 1 %}
+            <div class="pages">
+                <ul class="pagination">
+                    <li>
+                        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">First</a>
+                    </li>
+                    {% if supplies.has_previous %}
+                        <li><a href="?page={{ supplies.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo;</a>
+                        </li>
+                    {% endif %}
+                    {% for i in supplies.paginator.page_range %}
+                        {% if supplies.number == i %}
+                            <li class="active"><a>{{ i }}</a></li>
+                        {% else %}
+                            <li><a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if supplies.has_next %}
+                        <li><a href="?page={{ supplies.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&raquo;</a>
+                        </li>
+                    {% endif %}
+                    <li><a href="?page={{ supplies.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Last</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
+    </div>
+    <!-- /.col-md-9 -->
+{% endblock %}
+
+{% block copyright %}
+    {% if supplies_count < 4 %}
+        <div id="copyright" style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%;">
+    {% else %}
+        <div id="copyright">
+    {% endif %}
+            <div class="container">
+                <div class="col-md-6">
+                    <p class="pull-left">© 2016 ABCDEF...</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="pull-right">Template by <a
+                            href="http://bootstrapious.com/e-commerce-templates">Bootstrapious</a> with support from <a
+                            href="https://kakusei.cz">Kakusei</a>
+                        <!-- Not removing these links is part of the licence conditions of the template. Thanks for understanding :) -->
+                    </p>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $('.cart').click(function (e) {
+            e.preventDefault();
+            var link = $(this);
+            //alert(link.attr('id'));
+            $.ajax({
+                type: 'POST',
+                url: '/add-to-cart/',
+                data: JSON.stringify({
+                    sid:link.attr('id'),
+                    num:1
+                }),
+                contentType: 'application/json',
+                error: function (err) {
+                    alert("Please enable cookies and try again.");
+                },
+                success: function (arg) {
+                    document.getElementById('cartnum').innerHTML = arg;
+                    alert('Success');
+                }
+            });
+        });
+    </script>
+{% endblock %}

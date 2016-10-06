@@ -1,0 +1,121 @@
+{% extends 'demo/base.html' %}
+{% load staticfiles %}
+{% block searchbox %}
+    <!---------------------search box-------------------------------------------->
+    <div class="collapse clearfix" id="search">
+        <form class="navbar-form" role="search" action="{% url 'demo:index' supply.category.slug %}" method="get">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+    <!--/.nav-collapse -->
+{% endblock %}
+{% block base_left %}
+    <div class="col-md-3">
+        <!-- *** MENUS AND FILTERS ***-->
+        <!----------------------------Categories-------------------------------->
+        <div class="panel panel-default sidebar-menu">
+            <div class="panel-heading">
+                <h3 class="panel-title">Categories</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-stacked category-menu">
+                    {% for category in categries %}
+                        {% if category.slug == supply.category.slug %}
+                            <li class="active">
+                                <a href="{% url 'demo:index' category.slug %}">{{ category.name }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'demo:index' category.slug %}">{{ category.name }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block base_right %}
+    <div class="col-md-9">
+        <div class="row" id="productMain">
+            <div class="col-sm-4">
+                <div class="box" id="details">
+                    <div id="mainImage">
+                        <img src="{{ supply.image.url }}" alt="" class="img-responsive">
+                    </div>
+                    <p>
+                    <p class="text-center buttons">
+                        <input type="number" class="form-control" id="addnum" value="1" min="1" max="20" style="float: left; width: 6em">
+                        <a href="" id="{{ supply.id }}" class="btn btn-primary cart">
+                            <i class="fa fa-shopping-cart"></i>
+                            Add to cart
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+            <div class="col-sm-8">
+                <div class="box" id="details">
+                    <p>
+                    <h3 class="text-center">{{ supply.name }}</h3>
+                    <hr>
+                    <h4>Description</h4>
+                    <p>{{ supply.description }}</p>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <!-- /.col-md-9 -->
+{% endblock %}
+{% block copyright %}
+    <div id="copyright" style="position: fixed; bottom: 0; left: 0; right: 0; width: 100%;">
+        <div class="container">
+            <div class="col-md-6">
+                <p class="pull-left">© 2016 ABCDEF...</p>
+            </div>
+            <div class="col-md-6">
+                <p class="pull-right">Template by <a
+                        href="http://bootstrapious.com/e-commerce-templates">Bootstrapious</a> with support from <a
+                        href="https://kakusei.cz">Kakusei</a>
+                    <!-- Not removing these links is part of the licence conditions of the template. Thanks for understanding :) -->
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $('.cart').click(function (e) {
+            e.preventDefault();
+            var link = $(this);
+            //alert(link.attr('id'));
+            $.ajax({
+                type: 'POST',
+                url: '/add-to-cart/',
+                data: JSON.stringify({
+                    sid:link.attr('id'),
+                    num:$('#addnum').val()
+                }),
+                contentType: 'application/json',
+                error: function (err) {
+                    alert("error - " + err);
+                },
+                success: function (arg) {
+                    document.getElementById('cartnum').innerHTML = arg;
+                    alert('Success');
+                }
+            });
+        });
+    </script>
+{% endblock %}

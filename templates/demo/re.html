@@ -1,0 +1,60 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login Page</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="{% static 'demo/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'demo/css/animate.min.css' %}">
+
+        <!-- Metis core stylesheet -->
+        <link rel="stylesheet" href="{% static 'demo/css/main.min.css' %}">
+    </head>
+    <body class="login">
+        <div class="form-signin">
+            <div class="text-center">
+                <h3>Welcome</h3>
+            </div>
+            <hr>
+            <div class="tab-content">
+                <div id="signup" class="tab-pane {% if is_register %}active{% endif %}">
+                    <form action="" method="post">{% csrf_token %}
+                        {% form %}
+                        <button class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <ul class="list-inline">
+                    <li> <a class="text-muted" href="" data-toggle="tab">Login</a>    </li>
+{#                    <li> <a class="text-muted" href="#forgot" data-toggle="tab">Forgot Password</a>    </li>#}
+                    <li> <a class="text-muted" href="" data-toggle="tab">Signup</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!--jQuery -->
+        <script src="{% static 'demo/js/jquery.min.js' %}"></script>
+
+        <!--Bootstrap -->
+        <script src="{% static 'demo/js/bootstrap.min.js' %}"></script>
+{#        <script type="text/javascript">#}
+{#            (function($) {#}
+{#                $(document).ready(function() {#}
+{#                    $('.list-inline li > a').click(function() {#}
+{#                        var activeForm = $(this).attr('href') + ' > form';#}
+{#                        //console.log(activeForm);#}
+{#                        $(activeForm).addClass('animated fadeIn');#}
+{#                        //set timer to 1 seconds, after that, unload the animate animation#}
+{#                        setTimeout(function() {#}
+{#                            $(activeForm).removeClass('animated fadeIn');#}
+{#                        }, 1000);#}
+{#                    });#}
+{#                });#}
+{#            })(jQuery);#}
+{#        </script>#}
+    </body>
+</html>

@@ -1,0 +1,177 @@
+{% extends 'demo/base.html' %}
+{% block base_left %}
+    <div class="col-md-9" id="basket">
+        <div class="box">
+            <form id="cartlist" method="post" action="checkout1.html">
+                <h1>Shopping cart</h1>
+                {#<p class="text-muted">You currently have 3 item(s) in your cart.</p>#}
+                <hr>
+                {% if cart_supplies %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">Product</th>
+                                <th>Quantity</th>
+                                {#<th>Unit price</th>#}
+                                {#<th>Discount</th>#}
+                                {#<th><a href="#"><i class="fa fa-trash-o close1"></i></a></th>#}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cart_supply_dict in cart_supplies %}
+                                {% for cart_supply, quantity in cart_supply_dict.items %}
+                                    <tr>
+                                        <td>
+                                            <a href="#">
+                                                <img src="{{ cart_supply.image.url }}" alt="{{ cart_supply.name }}">
+                                            </a>
+                                        </td>
+                                        <td><a href="#">{{ cart_supply.name }}</a>
+                                        </td>
+                                        <td class="aaa">
+                                            <input type="number" id="quantity_{{ cart_supply.id }}" min="1" max="20"
+                                                   step="1"
+                                                   value="{{ quantity }}" class="form-control quantity">
+                                        </td>
+                                        <td><a href=""><i id="{{ cart_supply.id }}" class="fa fa-trash-o sdel"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th colspan="2">Total</th>
+                                <th id="cart_cartnum">{{ cart_num }}</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {% else %}
+                    <h3>Empty</h3>
+                {% endif %}
+                <!-- /.table-responsive -->
+
+                <div class="box-footer">
+                    <div class="pull-left">
+                        <a href="{% url 'demo:index' 'all' %}" class="btn btn-default">
+                            <i class="fa fa-chevron-left"></i> Continue shopping</a>
+                    </div>
+                    {% if cart_supplies %}
+                        <div class="pull-right">
+                            {#                        <button class="btn btn-default">#}
+                            {#                            <i class="fa fa-refresh"></i> Update basket</button>#}
+                            <button type="submit" class="btn btn-primary">Proceed to checkout
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+        <!-- /.box -->
+
+
+    </div>
+    <!-- /.col-md-9 -->
+{% endblock %}
+{% block base_right %}
+    <div class="col-md-3">
+        <div class="box" id="order-summary">
+            <div class="box-header">
+                <h3>Order summary</h3>
+            </div>
+            <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>Order subtotal</td>
+                        <th>$446.00</th>
+                    </tr>
+                    <tr>
+                        <td>Shipping and handling</td>
+                        <th>$10.00</th>
+                    </tr>
+                    <tr>
+                        <td>Tax</td>
+                        <th>$0.00</th>
+                    </tr>
+                    <tr class="total">
+                        <td>Total</td>
+                        <th>{{ cart_num }}</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.col-md-3 -->
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $('.quantity').bind('change', function (e) {
+            e.preventDefault();
+            var link = $(this);
+            var a = parseInt(link.val());
+            if (!isNaN(a)) {
+                if (a > 20 || a < 1) {
+                    alert('You need select a number between 1 to 20.');
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/chg-item/',
+                        data: JSON.stringify({
+                            sid: link.attr('id'),
+                            num: link.val()
+                        }),
+                        contentType: 'application/json',
+                        error: function () {
+                            alert("Please enable cookies and try again.");
+                        },
+                        success: function (arg) {
+                            document.getElementById('cart_cartnum').innerHTML = arg;
+                            document.getElementById('cartnum').innerHTML = arg;
+                            //alert('Success' + arg);
+                        }
+                    });
+                }
+            }
+            else {
+                alert('Please input a number.');
+            }
+        });
+        $('.sdel').click(function (e) {
+            e.preventDefault();
+            var link = $(this);
+            var delnum = link.parent().parent().prev().children().val();
+            var delrow = link.parent().parent().parent();
+            $.ajax({
+                type: 'POST',
+                url: '/del-item/',
+                data: JSON.stringify({
+                    sid: link.attr('id'),
+                    delnum: delnum
+                }),
+                contentType: 'application/json',
+                error: function () {
+                    alert("Please enable cookies and try again.");
+                },
+                success: function (arg) {
+                    document.getElementById('cart_cartnum').innerHTML = arg;
+                    document.getElementById('cartnum').innerHTML = arg;
+                    if(delrow.prev().length == 0 && delrow.next().length == 0){
+                        // if it is last, replace it with <h3>Empty</h3>
+                        $('.table-responsive').html('<h3>Empty</h3>');
+                    }else{
+                        delrow.remove();
+                    }
+                    //$('#cartnum').html(arg);
+                }
+            });
+        });
+    </script>
+{% endblock %}
